@@ -13,8 +13,9 @@ public class CalculatorApp extends Application {
 
     @Override
     public void start(Stage stage) {
+        CalculatorModel model = new CalculatorModel();
         CalculatorView view = new CalculatorView();
-        // CalculatorController controller = new CalculatorController();
+        new CalculatorController(model, view);
 
         Scene scene = new Scene(view.buildUI());
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());

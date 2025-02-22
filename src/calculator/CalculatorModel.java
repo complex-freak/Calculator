@@ -37,12 +37,24 @@ public class CalculatorModel {
         }
     }
 
+    public double getCurrentNumber() {
+        return currentNumber;
+    }
+
+    public double PrevNumber() {
+        return previousNumber;
+    }
+
     public void setOperand(double value, boolean isFirstOperand) {
         if (isFirstOperand) {
             previousNumber = value;
         } else {
             currentNumber = value;
         }
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 
     public double calculate() {
@@ -90,8 +102,9 @@ public class CalculatorModel {
         return currentNumber / 100;
     }
 
-    public void toggleSign () {
-        currentNumber = -currentNumber;
+    public double toggleSign (double value) {
+        setOperand(-value, false);
+        return getCurrentNumber();
     }
 
     public void clear () {

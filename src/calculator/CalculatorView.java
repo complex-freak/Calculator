@@ -33,6 +33,54 @@ public class CalculatorView {
         }
     }
 
+    public String getDisplay() {
+        return display.getText();
+    }
+
+    public void setDisplay(String value) {
+        display.setText(value);
+    }
+
+    public ButtonBase[] getNumberButtons() {
+        return numberButtons;
+    }
+
+    public ButtonBase getAddButton() {
+        return addButton;
+    }
+
+    public ButtonBase getSubtractButton() {
+        return subtractButton;
+    }
+
+    public ButtonBase getMultiplyButton() {
+        return multiplyButton;
+    }
+
+    public ButtonBase getDivideButton() {
+        return divideButton;
+    }
+
+    public ButtonBase getEqualButton() {
+        return equalButton;
+    }
+
+    public ButtonBase getClearButton() {
+        return clearButton;
+    }
+
+    public ButtonBase getToggleButton() {
+        return toggleButton;
+    }
+
+    public ButtonBase getPercentageButton() {
+        return percentageButton;
+    }
+
+    public ButtonBase getDecimalButton() {
+        return decimalButton;
+    }
+
     public VBox buildUI() {
         addButtons();
         return new VBox(display, layout);
