@@ -1,11 +1,13 @@
 package calculator;   // Gui Components
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.util.Objects;
 
 public class CalculatorView {
     private final GridPane layout = new GridPane();
@@ -93,18 +95,34 @@ public class CalculatorView {
         };
     }
 
-    // helper method
+    // helper methods
     private Button createButton(String text, String styleClass) {
         Button button = new Button(text);
         button.getStyleClass().add(styleClass);
         return button;
     }
 
+    private void forceExit() {
+        Platform.exit();
+        System.exit(0);
+    }
+
     private void handleInitializationError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Initialization Error");
-        alert.setHeaderText("An error occurred while initializing the calculator.");
-        alert.setContentText(e.getMessage());
-        alert.showAndWait();
+        alert.setHeaderText(null);
+        alert.setContentText("An error occurred while initializing the calculator.");
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                forceExit();
+            }
+        });
+
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        alertStage.setOnCloseRequest(event -> forceExit());
     }
 }

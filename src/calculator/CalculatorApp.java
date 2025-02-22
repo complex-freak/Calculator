@@ -11,6 +11,7 @@ public class CalculatorApp extends Application {
         Application.launch(args);
     }
 
+    @Override
     public void start(Stage stage) {
         CalculatorView view = new CalculatorView();
         // CalculatorController controller = new CalculatorController();
@@ -21,6 +22,5 @@ public class CalculatorApp extends Application {
         stage.setScene(scene);
         stage.setTitle("Calculator");
         stage.show();
-
     }
 }
