@@ -1,61 +1,125 @@
 package calculator;
-// Handles calculations
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
+
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.Objects;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class CalculatorModel {
-    private double current;
-    private double previous;
-    private String operator;
+    private double currentNumber;
+    private double previousNumber;
+    private String operator = "";
 
-    public void setOperator (String operator) {
-        this.operator = operator;
-        previous = current;
-        current = 0;
+    private static final Logger logger = Logger.getLogger(CalculatorModel.class.getName());
+
+    // Static block to configure the logger
+    static {
+        try {
+            File logDirectory = new File("logs");
+            if (!logDirectory.exists()) {
+                logDirectory.mkdir(); // Create directory if it doesn't exist
+            }
+
+            FileHandler fileHandler = new FileHandler("logs/calculator.log", true);
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+            logger.setUseParentHandlers(false); // Prevent logging to console
+        } catch (IOException e) {
+            System.err.println("Failed to initialize logger: " + e.getMessage());
+        }
     }
 
-    public double calculate () {
-        switch (operator) {
-            case "+": add();
-            case "-": subtract();
-            case "*": multiply();
-            case "/": divide();
-            default: return current;
+    public void setOperand(double value, boolean isFirstOperand) {
+        if (isFirstOperand) {
+            previousNumber = value;
+        } else {
+            currentNumber = value;
+        }
+    }
+
+    public double calculate() {
+        try {
+            if (operator.isEmpty()) {
+                logger.warning("No operator selected. Returning currentNumber.");
+                return currentNumber;
+            }
+
+            if ("/".equals(operator) && currentNumber == 0) {
+                throw new ArithmeticException("Division By Zero Error!");
+            }
+
+            double result = switch (operator) {
+                case "+" -> add();
+                case "-" -> subtract();
+                case "*" -> multiply();
+                case "/" -> divide();
+                default -> currentNumber;
+            };
+
+            return formatResult(result);
+        } catch (ArithmeticException e) {
+            logger.severe("Error: " + e.getMessage());
+            handleDivisionByZeroError();
+            return Double.NaN;
         }
     }
 
     public double add() {
-        return previous + current;
+        return previousNumber + currentNumber;
     }
 
     public double subtract() {
-        return previous - current;
+        return previousNumber - currentNumber;
     }
 
     public double multiply() {
-        return previous * current;
+        return previousNumber * currentNumber;
     }
 
-    public double divide() {
-        if (current == 0) {
-            System.out.println("Can not divide by Zero!!");
-            return 0;
-        }
-
-        return previous / current;
-    }
-
-    
+    public double divide() { return previousNumber / currentNumber; }
 
     public double calcPercentage () {
-        double percentage = 0;
-
-        return percentage;
+        return currentNumber / 100;
     }
 
     public void toggleSign () {
-        
+        currentNumber = -currentNumber;
     }
 
     public void clear () {
+        currentNumber = 0;
+        previousNumber = 0;
+        operator = "";
+    }
 
+    public void handleDivisionByZeroError () {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Division by Zero Error!");
+        alert.setHeaderText(null);
+        alert.setContentText("Cannot divide by zero!");
+        alert.showAndWait();
+
+        DialogPane alertDialogPane = alert.getDialogPane();
+        alertDialogPane.getStylesheets().add(Objects.requireNonNull(
+                getClass().getResource("styles.css")).toExternalForm());
+
+        logger.warning("Attempted division by zero.");
+    }
+
+    private double formatResult(double result) {
+        BigDecimal rounded = new BigDecimal(result)
+                .setScale(8, RoundingMode.HALF_UP)
+                .stripTrailingZeros();
+
+        DecimalFormat formatter = new DecimalFormat("#.########");
+        return Double.parseDouble(formatter.format(rounded));
     }
 }
