@@ -1,0 +1,42 @@
+# Ignore build directories
+/build/
+/out/
+/bin/
+
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+dist/
+
+# Ignore IDE-specific files
+/.idea/
+*.iml
+*.ipr
+*.iws
+/.vscode/
+*.launch
+
+# Ignore dependency directories
+/.mvn/
+/.gradle/
+
+# Ignore logs and temporary files
+*.log
+hs_err_pid*
+
+# Ignore JavaFX-specific files
+*.db
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore JavaFX cached files
+*.jfxcache
+
+# Ignore user-generated configuration files
+application.properties
+config/
