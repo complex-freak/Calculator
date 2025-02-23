@@ -1,4 +1,4 @@
-package calculator;   // Gui Components
+package calculator;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -152,14 +152,21 @@ public class CalculatorView implements ICalculatorView {
         };
     }
 
-    private void handleInitializationError(Exception e) {
+    private void handleInitializationError(Exception ignoredE) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Initialization Error");
         alert.setHeaderText(null);
         alert.setContentText("An error occurred while initializing the User Interface.");
 
+        String cssPath = "styles.css";
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+
+        if (getClass().getResource(cssPath) != null) {
+            dialogPane.getStylesheets().add(
+                    Objects.requireNonNull(getClass().getResource(cssPath)).toExternalForm());
+        } else {
+            logger.warning("Warning: Stylesheet not found!");
+        }
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -168,7 +175,7 @@ public class CalculatorView implements ICalculatorView {
         });
 
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-        alertStage.setOnCloseRequest(event -> forceExit());
+        alertStage.setOnCloseRequest(_ -> forceExit());
     }
 
     // helper methods

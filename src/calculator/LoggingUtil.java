@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class LoggingUtil {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static Logger getLogger(String className) {
         Logger logger = Logger.getLogger(className);
         try {

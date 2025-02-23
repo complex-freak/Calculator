@@ -17,10 +17,6 @@ public class CalculatorModel implements ICalculatorModel {
         return currentNumber;
     }
 
-    public double getPreviousNumber() {
-        return previousNumber;
-    }
-
     public void setOperand(double value, boolean isFirstOperand) {
         if (isFirstOperand) {
             previousNumber = value;

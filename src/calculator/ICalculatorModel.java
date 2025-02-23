@@ -2,7 +2,6 @@ package calculator;
 
 public interface ICalculatorModel {
     double getCurrentNumber();
-    double getPreviousNumber();
     void setOperand(double value, boolean isFirstOperand);
     String getOperator();
     void setOperator(String operator);
