@@ -3,9 +3,6 @@ package calculator;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -59,7 +56,7 @@ public class CalculatorModel implements ICalculatorModel {
                 default -> currentNumber;
             };
 
-            return formatResult(result);
+            return  Double.parseDouble(CalculatorUtils.formatNumber(result));
         } catch (ArithmeticException e) {
             logger.severe("Error: " + e.getMessage());
             handleDivisionByZeroError();
@@ -108,15 +105,5 @@ public class CalculatorModel implements ICalculatorModel {
                 getClass().getResource("styles.css")).toExternalForm());
 
         logger.warning("Attempted division by zero.");
-    }
-
-    // helper method
-    private double formatResult(double result) {
-        BigDecimal rounded = new BigDecimal(result)
-                .setScale(8, RoundingMode.HALF_UP)
-                .stripTrailingZeros();
-
-        DecimalFormat formatter = new DecimalFormat("#.########");
-        return Double.parseDouble(formatter.format(rounded));
     }
 }

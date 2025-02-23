@@ -4,16 +4,11 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
-import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class CalculatorApp extends Application {
     private static final Logger logger = LoggingUtil.getLogger(CalculatorApp.class.getName());
@@ -36,7 +31,7 @@ public class CalculatorApp extends Application {
                 scene.getStylesheets().add(
                         Objects.requireNonNull(getClass().getResource(cssPath)).toExternalForm());
             } else {
-                throw new Exception("Stylesheet 'styles.css' not found.");
+                throw new Exception("Stylesheet '" + cssPath + "' not found.");
             }
 
             stage.setScene(scene);

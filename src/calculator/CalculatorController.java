@@ -1,5 +1,6 @@
 package calculator;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CalculatorController {
@@ -25,23 +26,23 @@ public class CalculatorController {
     private void initializeNumberButtons() {
         for (int i = 0; i < 10; i++) {
             int number = i;
-            view.getNumberButtons()[i].setOnAction(event -> handleNumberInput(number));
+            view.getNumberButtons()[i].setOnAction(_ -> handleNumberInput(number));
         }
     }
 
     private void initializeOperatorButtons() {
-        view.getAddButton().setOnAction(event -> handleOperator("+"));
-        view.getSubtractButton().setOnAction(event -> handleOperator("-"));
-        view.getMultiplyButton().setOnAction(event -> handleOperator("*"));
-        view.getDivideButton().setOnAction(event -> handleOperator("/"));
+        view.getAddButton().setOnAction(_ -> handleOperator("+"));
+        view.getSubtractButton().setOnAction(_ -> handleOperator("-"));
+        view.getMultiplyButton().setOnAction(_ -> handleOperator("*"));
+        view.getDivideButton().setOnAction(_ -> handleOperator("/"));
     }
 
     private void initializeSpecialButtons() {
-        view.getEqualButton().setOnAction(event -> handleEquals());
-        view.getClearButton().setOnAction(event -> handleClear());
-        view.getToggleButton().setOnAction(event -> handleToggleSign());
-        view.getPercentageButton().setOnAction(event -> handlePercentage());
-        view.getDecimalButton().setOnAction(event -> handleDecimalInput());
+        view.getEqualButton().setOnAction(_ -> handleEquals());
+        view.getClearButton().setOnAction(_ -> handleClear());
+        view.getToggleButton().setOnAction(_ -> handleToggleSign());
+        view.getPercentageButton().setOnAction(_ -> handlePercentage());
+        view.getDecimalButton().setOnAction(_ -> handleDecimalInput());
     }
 
     private void initializeKeyHandlers() {
@@ -83,13 +84,14 @@ public class CalculatorController {
         try {
             double currentValue = Double.parseDouble(view.getDisplay());
 
+            // If a new input is starting, replace the display, else append
             if (!isNewInput) {
                 if (!model.getOperator().isEmpty()) {
                     model.setOperand(currentValue, false);
 
                     double result = model.calculate();
 
-                    view.setDisplay(formatNumber(result));
+                    view.setDisplay(CalculatorUtils.formatNumber(result));
                     model.setOperand(result, true);
                 } else {
                     model.setOperand(currentValue, true);
@@ -111,12 +113,12 @@ public class CalculatorController {
                 model.setOperand(current, false);
 
                 double result = model.calculate();
-                view.setDisplay(formatNumber(result));
+                view.setDisplay(CalculatorUtils.formatNumber(result));
 
                 model.clear();
                 isNewInput = true;
             } catch (NumberFormatException e) {
-                logger.warning("Error: Invalid input during calculation.\n" + e.getMessage());
+                CalculatorUtils.log("Error: Invalid input during calculation.", Level.SEVERE);
                 view.setDisplay("0");
             }
         }
@@ -131,7 +133,7 @@ public class CalculatorController {
     private void handleToggleSign() {
         double currentValue = Double.parseDouble(view.getDisplay());
         double result = model.toggleSign(currentValue);
-        view.setDisplay(formatNumber(result));
+        view.setDisplay(CalculatorUtils.formatNumber(result));
     }
 
     private void handlePercentage() {
@@ -140,7 +142,7 @@ public class CalculatorController {
 
         double result = model.calcPercentage();
 
-        view.setDisplay(formatNumber(result));
+        view.setDisplay(CalculatorUtils.formatNumber(result));
         model.setOperand(result, false);
         isNewInput = true;
     }
@@ -164,15 +166,6 @@ public class CalculatorController {
             view.setDisplay(currentDisplay.substring(0, currentDisplay.length() - 1));
         } else {
             view.setDisplay("0");
-        }
-    }
-
-    // helper method
-    private String formatNumber(double value) {
-        if (value == (long) value) {
-            return String.valueOf((long) value);
-        } else {
-            return String.valueOf(value);
         }
     }
 }
