@@ -32,24 +32,9 @@ public class CalculatorUtils {
      * Logs a message with a specified severity level.
      *
      * @param message The message to log.
-     * @param level   The severity level (e.g., Level.SEVERE, Level.WARNING).
+     * @param level   The severity level (e.g., Level.SEVERE, Level. WARNING).
      */
     public static void log(String message, Level level) {
         logger.log(level, message);
-    }
-
-    /**
-     * Validates if a string is a valid number.
-     *
-     * @param input The string to validate.
-     * @return True if the input is a valid number, false otherwise.
-     */
-    public static boolean isValidNumber(String input) {
-        try {
-            Double.parseDouble(input);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
     }
 }

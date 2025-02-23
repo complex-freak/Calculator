@@ -11,7 +11,7 @@ public class CalculatorModel implements ICalculatorModel {
     private double previousNumber;
     private String operator = "";
 
-    private static final Logger logger = LoggingUtil.getLogger(CalculatorApp.class.getName());
+    private static final Logger logger = LoggingUtil.getLogger(CalculatorModel.class.getName());
 
     public double getCurrentNumber() {
         return currentNumber;

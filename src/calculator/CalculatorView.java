@@ -25,7 +25,7 @@ public class CalculatorView implements ICalculatorView {
     private final Button toggleButton = createButton("+/-", "utility");
     private final Button percentageButton = createButton("%", "utility");
 
-    private static final Logger logger = LoggingUtil.getLogger(CalculatorApp.class.getName());
+    private static final Logger logger = LoggingUtil.getLogger(CalculatorView.class.getName());
 
     public CalculatorView() {
         try {

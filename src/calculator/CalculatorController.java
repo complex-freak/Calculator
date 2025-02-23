@@ -8,7 +8,7 @@ public class CalculatorController {
     private final ICalculatorView view;
     private boolean isNewInput = true;
 
-    private static final Logger logger = LoggingUtil.getLogger(CalculatorApp.class.getName());
+    private static final Logger logger = LoggingUtil.getLogger(CalculatorController.class.getName());
 
     public CalculatorController(ICalculatorModel model, ICalculatorView view) {
         this.model = model;
