@@ -1,11 +1,15 @@
 package calculator;
 
+import java.util.logging.Logger;
+
 public class CalculatorController {
-    private CalculatorModel model;
-    private CalculatorView view;
+    private final ICalculatorModel model;
+    private final ICalculatorView view;
     private boolean isNewInput = true;
 
-    public CalculatorController(CalculatorModel model, CalculatorView view) {
+    private static final Logger logger = LoggingUtil.getLogger(CalculatorApp.class.getName());
+
+    public CalculatorController(ICalculatorModel model, ICalculatorView view) {
         this.model = model;
         this.view = view;
         initializeEventHandlers();
@@ -13,27 +17,31 @@ public class CalculatorController {
 
     private void initializeEventHandlers() {
         initializeKeyHandlers();
+        initializeNumberButtons();
+        initializeOperatorButtons();
+        initializeSpecialButtons();
+    }
 
-        // Handle number buttons (0-9)
+    private void initializeNumberButtons() {
         for (int i = 0; i < 10; i++) {
             int number = i;
             view.getNumberButtons()[i].setOnAction(event -> handleNumberInput(number));
         }
+    }
 
-        // Handle operator buttons
+    private void initializeOperatorButtons() {
         view.getAddButton().setOnAction(event -> handleOperator("+"));
         view.getSubtractButton().setOnAction(event -> handleOperator("-"));
         view.getMultiplyButton().setOnAction(event -> handleOperator("*"));
         view.getDivideButton().setOnAction(event -> handleOperator("/"));
+    }
 
-        // Handle special function buttons
+    private void initializeSpecialButtons() {
         view.getEqualButton().setOnAction(event -> handleEquals());
         view.getClearButton().setOnAction(event -> handleClear());
         view.getToggleButton().setOnAction(event -> handleToggleSign());
         view.getPercentageButton().setOnAction(event -> handlePercentage());
-
         view.getDecimalButton().setOnAction(event -> handleDecimalInput());
-
     }
 
     private void initializeKeyHandlers() {
@@ -41,17 +49,19 @@ public class CalculatorController {
     }
 
     private void handleKeyPress(String key, String code) {
-        if (key.matches("[0-9]")) { // Numbers 0-9
+        if (key.matches("[0-9]")) {
             handleNumberInput(Integer.parseInt(key));
-        } else if (".".equals(key)) { // Decimal
+        } else if (".".equals(key)) {
             handleDecimalInput();
-        } else if ("+".equals(key) || "-".equals(key) || "*".equals(key) || "/".equals(key)) { // Operators
+        } else if ("+".equals(key) || "-".equals(key) || "*".equals(key) || "/".equals(key)) {
             handleOperator(key);
-        } else if ("ENTER".equals(code) || "=".equals(key)) { // Equals
+        } else if ("ENTER".equals(code) || "=".equals(key)) {
             handleEquals();
-        } else if ("BACK_SPACE".equals(code)) { // Backspace (delete last digit)
+        } else if ("BACK_SPACE".equals(code)) {
             handleBackspace();
-        } else if ("C".equalsIgnoreCase(key)) { // Clear
+        } else if ("C".equalsIgnoreCase(key)) {
+            handleClear();
+        } else if ("ESCAPE".equals(code)) {
             handleClear();
         }
     }
@@ -89,13 +99,13 @@ public class CalculatorController {
             model.setOperator(operator);
             isNewInput = true;
         } catch (NumberFormatException e) {
-            System.err.println("Error: Invalid number input.");
+            logger.warning("Error: Invalid number input.\n" + e.getMessage());
             view.setDisplay("0");
         }
     }
 
     private void handleEquals() {
-        if (!model.getOperator().isEmpty()) {
+        if (!model.getOperator().isEmpty() && !isNewInput) {
             try {
                 double current = Double.parseDouble(view.getDisplay());
                 model.setOperand(current, false);
@@ -106,7 +116,7 @@ public class CalculatorController {
                 model.clear();
                 isNewInput = true;
             } catch (NumberFormatException e) {
-                System.err.println("Error: Invalid input during calculation.");
+                logger.warning("Error: Invalid input during calculation.\n" + e.getMessage());
                 view.setDisplay("0");
             }
         }

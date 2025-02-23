@@ -8,11 +8,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.Objects;
+import java.util.logging.Logger;
 
-public class CalculatorView {
+public class CalculatorView implements ICalculatorView {
     private final GridPane layout = new GridPane();
 
-    private final TextField display = new TextField("");
+    private final TextField display = new TextField("0");
     private final Button[] numberButtons = new Button[10];
     private final Button decimalButton = createButton(".", null);
     private final Button addButton = createButton("+", "func");
@@ -24,13 +25,20 @@ public class CalculatorView {
     private final Button toggleButton = createButton("+/-", "utility");
     private final Button percentageButton = createButton("%", "utility");
 
+    private static final Logger logger = LoggingUtil.getLogger(CalculatorApp.class.getName());
+
     public CalculatorView() {
         try {
             initializeButtons();
             initializeStyles();
         } catch (Exception e) {
             handleInitializationError(e);
+            logger.severe("User Interface initialization failed: " + e.getMessage());
         }
+    }
+
+    public TextField getScene() {
+        return display;
     }
 
     public String getDisplay() {
@@ -97,6 +105,7 @@ public class CalculatorView {
         layout.getStyleClass().add("layout");
 
         display.setEditable(false);
+        display.setFocusTraversable(false);
         display.getStyleClass().add("calculator-display");
 
         numberButtons[0].setId("btn0");
@@ -143,23 +152,11 @@ public class CalculatorView {
         };
     }
 
-    // helper methods
-    private Button createButton(String text, String styleClass) {
-        Button button = new Button(text);
-        button.getStyleClass().add(styleClass);
-        return button;
-    }
-
-    private void forceExit() {
-        Platform.exit();
-        System.exit(0);
-    }
-
     private void handleInitializationError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Initialization Error");
         alert.setHeaderText(null);
-        alert.setContentText("An error occurred while initializing the calculator.");
+        alert.setContentText("An error occurred while initializing the User Interface.");
 
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
@@ -174,7 +171,15 @@ public class CalculatorView {
         alertStage.setOnCloseRequest(event -> forceExit());
     }
 
-    public TextField getScene() {
-        return display;
+    // helper methods
+    private Button createButton(String text, String styleClass) {
+        Button button = new Button(text);
+        button.getStyleClass().add(styleClass);
+        return button;
+    }
+
+    private void forceExit() {
+        Platform.exit();
+        System.exit(0);
     }
 }

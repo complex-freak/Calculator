@@ -3,45 +3,24 @@ package calculator;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Objects;
-import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
-public class CalculatorModel {
+public class CalculatorModel implements ICalculatorModel {
     private double currentNumber;
     private double previousNumber;
     private String operator = "";
 
-    private static final Logger logger = Logger.getLogger(CalculatorModel.class.getName());
-
-    // Static block to configure the logger
-    static {
-        try {
-            File logDirectory = new File("logs");
-            if (!logDirectory.exists()) {
-                logDirectory.mkdir(); // Create directory if it doesn't exist
-            }
-
-            FileHandler fileHandler = new FileHandler("logs/calculator.log", true);
-            fileHandler.setFormatter(new SimpleFormatter());
-            logger.addHandler(fileHandler);
-            logger.setUseParentHandlers(false); // Prevent logging to console
-        } catch (IOException e) {
-            System.err.println("Failed to initialize logger: " + e.getMessage());
-        }
-    }
+    private static final Logger logger = LoggingUtil.getLogger(CalculatorApp.class.getName());
 
     public double getCurrentNumber() {
         return currentNumber;
     }
 
-    public double PrevNumber() {
+    public double getPreviousNumber() {
         return previousNumber;
     }
 
@@ -131,6 +110,7 @@ public class CalculatorModel {
         logger.warning("Attempted division by zero.");
     }
 
+    // helper method
     private double formatResult(double result) {
         BigDecimal rounded = new BigDecimal(result)
                 .setScale(8, RoundingMode.HALF_UP)
