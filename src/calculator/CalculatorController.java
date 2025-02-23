@@ -11,11 +11,12 @@ public class CalculatorController {
         initializeEventHandlers();
     }
 
-
     private void initializeEventHandlers() {
+        initializeKeyHandlers();
+
         // Handle number buttons (0-9)
         for (int i = 0; i < 10; i++) {
-            int number = i; // Capture loop variable
+            int number = i;
             view.getNumberButtons()[i].setOnAction(event -> handleNumberInput(number));
         }
 
@@ -35,6 +36,26 @@ public class CalculatorController {
 
     }
 
+    private void initializeKeyHandlers() {
+        view.getScene().setOnKeyPressed(event -> handleKeyPress(event.getText(), event.getCode().toString()));
+    }
+
+    private void handleKeyPress(String key, String code) {
+        if (key.matches("[0-9]")) { // Numbers 0-9
+            handleNumberInput(Integer.parseInt(key));
+        } else if (".".equals(key)) { // Decimal
+            handleDecimalInput();
+        } else if ("+".equals(key) || "-".equals(key) || "*".equals(key) || "/".equals(key)) { // Operators
+            handleOperator(key);
+        } else if ("ENTER".equals(code) || "=".equals(key)) { // Equals
+            handleEquals();
+        } else if ("BACK_SPACE".equals(code)) { // Backspace (delete last digit)
+            handleBackspace();
+        } else if ("C".equalsIgnoreCase(key)) { // Clear
+            handleClear();
+        }
+    }
+
     private void handleNumberInput(int number) {
         String currentDisplay = view.getDisplay();
 
@@ -49,21 +70,46 @@ public class CalculatorController {
     }
 
     private void handleOperator(String operator) {
-        double currentValue = Double.parseDouble(view.getDisplay());
-        model.setOperand(currentValue, true);
-        model.setOperator(operator);
+        try {
+            double currentValue = Double.parseDouble(view.getDisplay());
 
-        isNewInput = true;
+            if (!isNewInput) {
+                if (!model.getOperator().isEmpty()) {
+                    model.setOperand(currentValue, false);
+
+                    double result = model.calculate();
+
+                    view.setDisplay(formatNumber(result));
+                    model.setOperand(result, true);
+                } else {
+                    model.setOperand(currentValue, true);
+                }
+            }
+
+            model.setOperator(operator);
+            isNewInput = true;
+        } catch (NumberFormatException e) {
+            System.err.println("Error: Invalid number input.");
+            view.setDisplay("0");
+        }
     }
 
     private void handleEquals() {
-        double current = Double.parseDouble(view.getDisplay());
-        model.setOperand(current, false);
+        if (!model.getOperator().isEmpty()) {
+            try {
+                double current = Double.parseDouble(view.getDisplay());
+                model.setOperand(current, false);
 
-        double result = model.calculate();
+                double result = model.calculate();
+                view.setDisplay(formatNumber(result));
 
-        view.setDisplay(formatNumber(result));
-        isNewInput = true;
+                model.clear();
+                isNewInput = true;
+            } catch (NumberFormatException e) {
+                System.err.println("Error: Invalid input during calculation.");
+                view.setDisplay("0");
+            }
+        }
     }
 
     private void handleClear() {
@@ -75,8 +121,7 @@ public class CalculatorController {
     private void handleToggleSign() {
         double currentValue = Double.parseDouble(view.getDisplay());
         double result = model.toggleSign(currentValue);
-
-        view.setDisplay(String.valueOf(result));
+        view.setDisplay(formatNumber(result));
     }
 
     private void handlePercentage() {
@@ -85,7 +130,7 @@ public class CalculatorController {
 
         double result = model.calcPercentage();
 
-        view.setDisplay(String.valueOf(result));
+        view.setDisplay(formatNumber(result));
         model.setOperand(result, false);
         isNewInput = true;
     }
@@ -100,6 +145,15 @@ public class CalculatorController {
                 view.setDisplay(currentDisplay + ".");
             }
             isNewInput = false;
+        }
+    }
+
+    private void handleBackspace() {
+        String currentDisplay = view.getDisplay();
+        if (currentDisplay.length() > 1) {
+            view.setDisplay(currentDisplay.substring(0, currentDisplay.length() - 1));
+        } else {
+            view.setDisplay("0");
         }
     }
 

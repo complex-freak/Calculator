@@ -96,7 +96,7 @@ public class CalculatorView {
         GridPane.setMargin(display, new Insets(8, 0, 8, 0));
         layout.getStyleClass().add("layout");
 
-        // display.setEditable(false);
+        display.setEditable(false);
         display.getStyleClass().add("calculator-display");
 
         numberButtons[0].setId("btn0");
@@ -172,5 +172,9 @@ public class CalculatorView {
 
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         alertStage.setOnCloseRequest(event -> forceExit());
+    }
+
+    public TextField getScene() {
+        return display;
     }
 }
