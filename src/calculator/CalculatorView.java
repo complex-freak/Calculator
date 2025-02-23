@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class CalculatorView implements ICalculatorView {
     private final GridPane layout = new GridPane();
 
-    private final TextField display = new TextField("0");
+    private final TextField display = new TextField("");
     private final Button[] numberButtons = new Button[10];
     private final Button decimalButton = createButton(".", null);
     private final Button addButton = createButton("+", "func");
@@ -105,7 +105,6 @@ public class CalculatorView implements ICalculatorView {
         layout.getStyleClass().add("layout");
 
         display.setEditable(false);
-        display.setFocusTraversable(false);
         display.getStyleClass().add("calculator-display");
 
         numberButtons[0].setId("btn0");

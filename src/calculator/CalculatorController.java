@@ -131,12 +131,20 @@ public class CalculatorController {
     }
 
     private void handleToggleSign() {
+        if (view.getDisplay().isEmpty()) {
+            view.setDisplay("0");
+        }
+
         double currentValue = Double.parseDouble(view.getDisplay());
         double result = model.toggleSign(currentValue);
         view.setDisplay(CalculatorUtils.formatNumber(result));
     }
 
     private void handlePercentage() {
+        if (view.getDisplay().isEmpty()) {
+            view.setDisplay("0");
+        }
+
         double currentValue = Double.parseDouble(view.getDisplay());
         model.setOperand(currentValue, false);
 
