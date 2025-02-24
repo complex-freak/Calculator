@@ -71,4 +71,4 @@ Contributions are welcome! Feel free to fork this repository, make improvements,
 
 ## License
 
-This project is licensed under the [MIT License]().
+This project is licensed under the [MIT License](LICENSE).
