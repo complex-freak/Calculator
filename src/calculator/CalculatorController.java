@@ -117,9 +117,9 @@ public class CalculatorController {
 
                 model.clear();
                 isNewInput = true;
-            } catch (NumberFormatException e) {
-                CalculatorUtils.log("Error: Invalid input during calculation.", Level.SEVERE);
-                view.setDisplay("0");
+            } catch (ArithmeticException | IllegalArgumentException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+                view.setDisplay("Error: " + e.getMessage());
             }
         }
     }
