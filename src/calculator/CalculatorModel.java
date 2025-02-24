@@ -1,9 +1,5 @@
 package calculator;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.DialogPane;
-
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

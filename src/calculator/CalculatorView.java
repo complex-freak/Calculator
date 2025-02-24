@@ -37,58 +37,72 @@ public class CalculatorView implements ICalculatorView {
         }
     }
 
+    @Override
     public TextField getScene() {
         return display;
     }
 
+    @Override
     public String getDisplay() {
         return display.getText();
     }
 
+    @Override
     public void setDisplay(String value) {
         display.setText(value);
     }
 
+    @Override
     public ButtonBase[] getNumberButtons() {
         return numberButtons;
     }
 
+    @Override
     public ButtonBase getAddButton() {
         return addButton;
     }
 
+    @Override
     public ButtonBase getSubtractButton() {
         return subtractButton;
     }
 
+    @Override
     public ButtonBase getMultiplyButton() {
         return multiplyButton;
     }
 
+    @Override
     public ButtonBase getDivideButton() {
         return divideButton;
     }
 
+    @Override
     public ButtonBase getEqualButton() {
         return equalButton;
     }
 
+    @Override
     public ButtonBase getClearButton() {
         return clearButton;
     }
 
+    @Override
     public ButtonBase getToggleButton() {
         return toggleButton;
     }
 
+    @Override
     public ButtonBase getPercentageButton() {
         return percentageButton;
     }
 
+    @Override
     public ButtonBase getDecimalButton() {
         return decimalButton;
     }
 
+    @Override
     public VBox buildUI() {
         addButtons();
         return new VBox(display, layout);
